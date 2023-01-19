@@ -2,23 +2,23 @@ import './index.css';
 
 const ToDoListArray = [
   {
-    description: "wash dishes",
+    description: 'wash dishes',
     index: 1,
     completed: false,
   },
   {
-    description: "take breakfast",
+    description: 'take breakfast',
     index: 1,
     completed: false,
   },
   {
-    description: "play football",
+    description: 'play football',
     index: 1,
     completed: false,
   },
 ];
 
-const myListItems = document.querySelector(".myListItems");
+const myListItems = document.querySelector('.myListItems');
 
 ToDoListArray.forEach((object) => {
   myListItems.innerHTML += `
