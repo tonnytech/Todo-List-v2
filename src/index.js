@@ -1,4 +1,5 @@
 import './index.css';
+import getBookStorage from './modules/getStorage.js';
 
 // Declaring variables
 
@@ -6,36 +7,12 @@ const myListItems = document.querySelector('.to-do-list');
 const toDoItem = document.getElementById('toDoItem');
 const clearAllBtn = document.querySelector('.my-button');
 
-// Get data from local storage
+// Recalculate index
 
-const getBookStorage = () => {
-  let taskListStorage;
-  if (JSON.parse(localStorage.getItem('taskList')) === null) {
-    taskListStorage = [];
-  } else {
-    taskListStorage = JSON.parse(localStorage.getItem('taskList'));
-  }
-  return taskListStorage;
-};
-
-// Remove task from local storage
-
-const removeFromStorage = (listIndex) => {
-  const tasks = getBookStorage();
-  const newTaskArray = tasks.filter(
-    (task) => task.index !== parseInt(listIndex, 10),
-  );
-  localStorage.setItem('taskList', JSON.stringify(newTaskArray));
-};
-
-// Editing tasks
-
-const EditTask = (IndexToEdit, newValue) => {
+const recalculateIndex = () => {
   const storage = getBookStorage();
-  storage.forEach((stored) => {
-    if (stored.index === parseInt(IndexToEdit, 10)) {
-      stored.description = newValue;
-    }
+  storage.forEach((item, itemIndex) => {
+    item.index = itemIndex;
   });
   localStorage.setItem('taskList', JSON.stringify(storage));
 };
@@ -50,6 +27,31 @@ const completeStatus = (indexToChange, newStatus) => {
     }
   });
   localStorage.setItem('taskList', JSON.stringify(storage));
+  recalculateIndex();
+};
+
+// Remove task from local storage
+
+const removeFromStorage = (listIndex) => {
+  const tasks = getBookStorage();
+  const newTaskArray = tasks.filter(
+    (task) => task.index !== parseInt(listIndex, 10),
+  );
+  localStorage.setItem('taskList', JSON.stringify(newTaskArray));
+  recalculateIndex();
+};
+
+// Editing tasks
+
+const EditTask = (IndexToEdit, newValue) => {
+  const storage = getBookStorage();
+  storage.forEach((stored) => {
+    if (stored.index === parseInt(IndexToEdit, 10)) {
+      stored.description = newValue;
+    }
+  });
+  localStorage.setItem('taskList', JSON.stringify(storage));
+  recalculateIndex();
 };
 
 // Generating lists of tasks
@@ -189,6 +191,7 @@ const clearAll = () => {
   const storage = getBookStorage();
   const newTaskArray = storage.filter((task) => task.completed === false);
   localStorage.setItem('taskList', JSON.stringify(newTaskArray));
+  recalculateIndex();
 };
 
 clearAllBtn.addEventListener('click', () => {
@@ -202,6 +205,7 @@ const refreshStatus = () => {
     stored.completed = false;
   });
   localStorage.setItem('taskList', JSON.stringify(storage));
+  recalculateIndex();
 };
 
 window.addEventListener('load', () => {
