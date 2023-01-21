@@ -4,6 +4,7 @@ import './index.css';
 
 const myListItems = document.querySelector('.to-do-list');
 const toDoItem = document.getElementById('toDoItem');
+const clearAllBtn = document.querySelector('.my-button');
 
 // Get data from local storage
 
@@ -29,11 +30,23 @@ const removeFromStorage = (listIndex) => {
 
 // Editing tasks
 
-const findEditTask = (IndexToEdit, newValue) => {
+const EditTask = (IndexToEdit, newValue) => {
   const storage = getBookStorage();
   storage.forEach((stored) => {
     if (stored.index === parseInt(IndexToEdit, 10)) {
       stored.description = newValue;
+    }
+  });
+  localStorage.setItem('taskList', JSON.stringify(storage));
+};
+
+// Editing complete status
+
+const completeStatus = (indexToChange, newStatus) => {
+  const storage = getBookStorage();
+  storage.forEach((stored) => {
+    if (stored.index === parseInt(indexToChange, 10)) {
+      stored.completed = newStatus;
     }
   });
   localStorage.setItem('taskList', JSON.stringify(storage));
@@ -52,9 +65,18 @@ const AddToDoListItems = (listItem) => {
 
   const doneCheckbox = document.createElement('input');
   doneCheckbox.setAttribute('type', 'checkbox');
-  doneCheckbox.checked = listItem.complete;
   doneCheckbox.classList.add('my-checkbox');
+  doneCheckbox.dataset.complete_list = listItem.index;
   mainElement.appendChild(doneCheckbox);
+
+  doneCheckbox.addEventListener('click', (e) => {
+    const IndexToEdit = e.target.dataset.complete_list;
+    if (doneCheckbox.checked === true) {
+      completeStatus(IndexToEdit, true);
+    } else {
+      completeStatus(IndexToEdit, false);
+    }
+  });
 
   // Creating an input type
 
@@ -72,7 +94,7 @@ const AddToDoListItems = (listItem) => {
     const IndexToEdit = e.target.dataset.complete_list;
     toDoInput.addEventListener('change', () => {
       const updatedTask = toDoInput.value;
-      findEditTask(IndexToEdit, updatedTask);
+      EditTask(IndexToEdit, updatedTask);
       toDoInput.setAttribute('readonly', true);
     });
   });
@@ -161,6 +183,28 @@ toDoItem.addEventListener('keydown', (e) => {
   }
 });
 
+// Handling clear all event
+
+const clearAll = () => {
+  const storage = getBookStorage();
+  const newTaskArray = storage.filter((task) => task.completed === false);
+  localStorage.setItem('taskList', JSON.stringify(newTaskArray));
+};
+
+clearAllBtn.addEventListener('click', () => {
+  clearAll();
+  appendItems();
+});
+
+const refreshStatus = () => {
+  const storage = getBookStorage();
+  storage.forEach((stored) => {
+    stored.completed = false;
+  });
+  localStorage.setItem('taskList', JSON.stringify(storage));
+};
+
 window.addEventListener('load', () => {
+  refreshStatus();
   appendItems();
 });
