@@ -1,58 +1,102 @@
-import "./index.css";
+import './index.css';
 
-// Declear variables
+// Declaring variables
 
-const myListItems = document.querySelector(".to-do-list");
-const toDoItem = document.getElementById("toDoItem");
+const myListItems = document.querySelector('.to-do-list');
+const toDoItem = document.getElementById('toDoItem');
 
 // Get data from local storage
 
 const getBookStorage = () => {
   let taskListStorage;
-  if (JSON.parse(localStorage.getItem("taskList")) === null) {
+  if (JSON.parse(localStorage.getItem('taskList')) === null) {
     taskListStorage = [];
   } else {
-    taskListStorage = JSON.parse(localStorage.getItem("taskList"));
+    taskListStorage = JSON.parse(localStorage.getItem('taskList'));
   }
   return taskListStorage;
+};
+
+// Remove task from local storage
+
+const removeFromStorage = (listIndex) => {
+  const tasks = getBookStorage();
+  const newTaskArray = tasks.filter(
+    (task) => task.index !== parseInt(listIndex, 10),
+  );
+  localStorage.setItem('taskList', JSON.stringify(newTaskArray));
+};
+
+// Editing tasks
+
+const findEditTask = (IndexToEdit, newValue) => {
+  const storage = getBookStorage();
+  storage.forEach((stored) => {
+    if (stored.index === parseInt(IndexToEdit, 10)) {
+      stored.description = newValue;
+    }
+  });
+  localStorage.setItem('taskList', JSON.stringify(storage));
 };
 
 // Generating lists of tasks
 
 const AddToDoListItems = (listItem) => {
-  const mainElement = document.createElement("li");
-  mainElement.classList.add("to-do-pop");
+  // Creating a list item
+
+  const mainElement = document.createElement('li');
+  mainElement.classList.add('to-do-pop');
   mainElement.dataset.id = listItem.index;
 
-  const doneCheckbox = document.createElement("input");
-  doneCheckbox.setAttribute("type", "checkbox");
+  // Creating  a checkbox
+
+  const doneCheckbox = document.createElement('input');
+  doneCheckbox.setAttribute('type', 'checkbox');
   doneCheckbox.checked = listItem.complete;
-  doneCheckbox.classList.add("my-checkbox");
+  doneCheckbox.classList.add('my-checkbox');
   mainElement.appendChild(doneCheckbox);
 
-  const toDoInput = document.createElement("INPUT");
-  toDoInput.setAttribute("type", "input");
-  toDoInput.setAttribute("readonly", true);
-  toDoInput.setAttribute("value", listItem.description);
-  toDoInput.classList.add("to-do-input");
+  // Creating an input type
+
+  const toDoInput = document.createElement('INPUT');
+  toDoInput.setAttribute('type', 'input');
+  toDoInput.setAttribute('readonly', true);
+  toDoInput.setAttribute('value', listItem.description);
+  toDoInput.classList.add('to-do-input');
+  toDoInput.dataset.complete_list = listItem.index;
   mainElement.appendChild(toDoInput);
 
-  toDoInput.addEventListener("click", () => {
-    toDoInput.removeAttribute("readonly");
+  // Handling editing task event
+  toDoInput.addEventListener('click', (e) => {
+    toDoInput.removeAttribute('readonly');
+    const IndexToEdit = e.target.dataset.complete_list;
+    toDoInput.addEventListener('change', () => {
+      const updatedTask = toDoInput.value;
+      findEditTask(IndexToEdit, updatedTask);
+      toDoInput.setAttribute('readonly', true);
+    });
   });
 
-  const deleteBtn = document.createElement("i");
-  deleteBtn.classList.add("fa-solid");
+  // Creating a delete icon
+
+  const deleteBtn = document.createElement('i');
+  deleteBtn.classList.add('fa-solid');
   deleteBtn.id = listItem.index;
-  deleteBtn.classList.add("fa-ellipsis-vertical");
-  deleteBtn.addEventListener('click', () => {
-    deleteBtn.classList.remove('fa-ellipsis-vertical');
-    deleteBtn.classList.add('fa-trash-can');
+  deleteBtn.classList.add('fa-ellipsis-vertical');
+
+  // Handling delete Event
+
+  deleteBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (deleteBtn.classList.contains('fa-trash-can')) {
+      deleteBtn.parentElement.remove();
+      removeFromStorage(e.target.id);
+    } else {
+      deleteBtn.classList.remove('fa-ellipsis-vertical');
+      deleteBtn.classList.add('fa-trash-can');
+    }
   });
-  const deleteIcon = document.querySelector('.fa-trash-can');
-  deleteIcon.addEventListener('click', () => {
-    deleteIcon.parentElement.remove();
-  });
+
   mainElement.appendChild(deleteBtn);
 
   return mainElement;
@@ -61,6 +105,7 @@ const AddToDoListItems = (listItem) => {
 // Appending the generated list to the html file
 
 const appendItems = () => {
+  myListItems.innerHTML = '';
   const storage = getBookStorage();
   storage.forEach((item) => {
     const toDoItem = AddToDoListItems(item);
@@ -79,8 +124,7 @@ const clearInputs = () => {
 const addToStorage = (item) => {
   const storage = getBookStorage();
   storage.push(item);
-  localStorage.setItem("taskList", JSON.stringify(storage));
-  appendItems();
+  localStorage.setItem('taskList', JSON.stringify(storage));
   clearInputs();
 };
 
@@ -98,9 +142,10 @@ const addTask = (task, complete = false, index) => {
   };
 
   addToStorage(newTask);
+  appendItems();
 };
 
-// Add a new task from the input in the html file
+// Adding a new task from the input in the index.html file
 
 const addEvent = () => {
   const taskStorage = getBookStorage();
@@ -110,10 +155,12 @@ const addEvent = () => {
   addTask(toDoItem.value, false, taskStorage.length);
 };
 
-toDoItem.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") {
+toDoItem.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
     addEvent();
   }
 });
 
-appendItems();
+window.addEventListener('load', () => {
+  appendItems();
+});
