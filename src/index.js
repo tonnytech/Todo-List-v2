@@ -17,6 +17,16 @@ const getBookStorage = () => {
   return taskListStorage;
 };
 
+// Recalculate index
+
+const recalculateIndex = () => {
+  const storage = getBookStorage();
+  storage.forEach((item, itemIndex) => {
+    item.index = itemIndex;
+  });
+  localStorage.setItem('taskList', JSON.stringify(storage));
+};
+
 // Remove task from local storage
 
 const removeFromStorage = (listIndex) => {
@@ -25,6 +35,7 @@ const removeFromStorage = (listIndex) => {
     (task) => task.index !== parseInt(listIndex, 10),
   );
   localStorage.setItem('taskList', JSON.stringify(newTaskArray));
+  recalculateIndex();
 };
 
 // Editing tasks
@@ -37,6 +48,7 @@ const findEditTask = (IndexToEdit, newValue) => {
     }
   });
   localStorage.setItem('taskList', JSON.stringify(storage));
+  recalculateIndex();
 };
 
 // Generating lists of tasks
@@ -125,6 +137,7 @@ const addToStorage = (item) => {
   const storage = getBookStorage();
   storage.push(item);
   localStorage.setItem('taskList', JSON.stringify(storage));
+  recalculateIndex();
   clearInputs();
 };
 
