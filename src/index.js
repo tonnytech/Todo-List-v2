@@ -1,11 +1,11 @@
-import './index.css';
-import getBookStorage from './modules/getStorage.js';
+import "./index.css";
+import getBookStorage from "./modules/getStorage.js";
 
 // Declaring variables
 
-const myListItems = document.querySelector('.to-do-list');
-const toDoItem = document.getElementById('toDoItem');
-const clearAllBtn = document.querySelector('.my-button');
+const myListItems = document.querySelector(".to-do-list");
+const toDoItem = document.getElementById("toDoItem");
+const clearAllBtn = document.querySelector(".my-button");
 
 // Recalculate index
 
@@ -14,7 +14,7 @@ const recalculateIndex = () => {
   storage.forEach((item, itemIndex) => {
     item.index = itemIndex;
   });
-  localStorage.setItem('taskList', JSON.stringify(storage));
+  localStorage.setItem("taskList", JSON.stringify(storage));
 };
 
 // Editing complete status
@@ -26,18 +26,8 @@ const completeStatus = (indexToChange, newStatus) => {
       stored.completed = newStatus;
     }
   });
-  localStorage.setItem('taskList', JSON.stringify(storage));
+  localStorage.setItem("taskList", JSON.stringify(storage));
   recalculateIndex();
-};
-
-// Recalculate index
-
-const recalculateIndex = () => {
-  const storage = getBookStorage();
-  storage.forEach((item, itemIndex) => {
-    item.index = itemIndex;
-  });
-  localStorage.setItem('taskList', JSON.stringify(storage));
 };
 
 // Remove task from local storage
@@ -45,9 +35,9 @@ const recalculateIndex = () => {
 const removeFromStorage = (listIndex) => {
   const tasks = getBookStorage();
   const newTaskArray = tasks.filter(
-    (task) => task.index !== parseInt(listIndex, 10),
+    (task) => task.index !== parseInt(listIndex, 10)
   );
-  localStorage.setItem('taskList', JSON.stringify(newTaskArray));
+  localStorage.setItem("taskList", JSON.stringify(newTaskArray));
   recalculateIndex();
 };
 
@@ -60,7 +50,7 @@ const EditTask = (IndexToEdit, newValue) => {
       stored.description = newValue;
     }
   });
-  localStorage.setItem('taskList', JSON.stringify(storage));
+  localStorage.setItem("taskList", JSON.stringify(storage));
   recalculateIndex();
 };
 
@@ -69,19 +59,19 @@ const EditTask = (IndexToEdit, newValue) => {
 const AddToDoListItems = (listItem) => {
   // Creating a list item
 
-  const mainElement = document.createElement('li');
-  mainElement.classList.add('to-do-pop');
+  const mainElement = document.createElement("li");
+  mainElement.classList.add("to-do-pop");
   mainElement.dataset.id = listItem.index;
 
   // Creating  a checkbox
 
-  const doneCheckbox = document.createElement('input');
-  doneCheckbox.setAttribute('type', 'checkbox');
-  doneCheckbox.classList.add('my-checkbox');
+  const doneCheckbox = document.createElement("input");
+  doneCheckbox.setAttribute("type", "checkbox");
+  doneCheckbox.classList.add("my-checkbox");
   doneCheckbox.dataset.complete_list = listItem.index;
   mainElement.appendChild(doneCheckbox);
 
-  doneCheckbox.addEventListener('click', (e) => {
+  doneCheckbox.addEventListener("click", (e) => {
     const IndexToEdit = e.target.dataset.complete_list;
     if (doneCheckbox.checked === true) {
       completeStatus(IndexToEdit, true);
@@ -92,42 +82,42 @@ const AddToDoListItems = (listItem) => {
 
   // Creating an input type
 
-  const toDoInput = document.createElement('INPUT');
-  toDoInput.setAttribute('type', 'input');
-  toDoInput.setAttribute('readonly', true);
-  toDoInput.setAttribute('value', listItem.description);
-  toDoInput.classList.add('to-do-input');
+  const toDoInput = document.createElement("INPUT");
+  toDoInput.setAttribute("type", "input");
+  toDoInput.setAttribute("readonly", true);
+  toDoInput.setAttribute("value", listItem.description);
+  toDoInput.classList.add("to-do-input");
   toDoInput.dataset.complete_list = listItem.index;
   mainElement.appendChild(toDoInput);
 
   // Handling editing task event
-  toDoInput.addEventListener('click', (e) => {
-    toDoInput.removeAttribute('readonly');
+  toDoInput.addEventListener("click", (e) => {
+    toDoInput.removeAttribute("readonly");
     const IndexToEdit = e.target.dataset.complete_list;
-    toDoInput.addEventListener('change', () => {
+    toDoInput.addEventListener("change", () => {
       const updatedTask = toDoInput.value;
       EditTask(IndexToEdit, updatedTask);
-      toDoInput.setAttribute('readonly', true);
+      toDoInput.setAttribute("readonly", true);
     });
   });
 
   // Creating a delete icon
 
-  const deleteBtn = document.createElement('i');
-  deleteBtn.classList.add('fa-solid');
+  const deleteBtn = document.createElement("i");
+  deleteBtn.classList.add("fa-solid");
   deleteBtn.id = listItem.index;
-  deleteBtn.classList.add('fa-ellipsis-vertical');
+  deleteBtn.classList.add("fa-ellipsis-vertical");
 
   // Handling delete Event
 
-  deleteBtn.addEventListener('click', (e) => {
+  deleteBtn.addEventListener("click", (e) => {
     e.preventDefault();
-    if (deleteBtn.classList.contains('fa-trash-can')) {
+    if (deleteBtn.classList.contains("fa-trash-can")) {
       deleteBtn.parentElement.remove();
       removeFromStorage(e.target.id);
     } else {
-      deleteBtn.classList.remove('fa-ellipsis-vertical');
-      deleteBtn.classList.add('fa-trash-can');
+      deleteBtn.classList.remove("fa-ellipsis-vertical");
+      deleteBtn.classList.add("fa-trash-can");
     }
   });
 
@@ -139,7 +129,7 @@ const AddToDoListItems = (listItem) => {
 // Appending the generated list to the html file
 
 const appendItems = () => {
-  myListItems.innerHTML = '';
+  myListItems.innerHTML = "";
   const storage = getBookStorage();
   storage.forEach((item) => {
     const toDoItem = AddToDoListItems(item);
@@ -150,7 +140,7 @@ const appendItems = () => {
 // clear input
 
 const clearInputs = () => {
-  toDoItem.value = '';
+  toDoItem.value = "";
 };
 
 // Adding tasks to local storage
@@ -158,7 +148,7 @@ const clearInputs = () => {
 const addToStorage = (item) => {
   const storage = getBookStorage();
   storage.push(item);
-  localStorage.setItem('taskList', JSON.stringify(storage));
+  localStorage.setItem("taskList", JSON.stringify(storage));
   recalculateIndex();
   clearInputs();
 };
@@ -190,8 +180,8 @@ const addEvent = () => {
   addTask(toDoItem.value, false, taskStorage.length);
 };
 
-toDoItem.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') {
+toDoItem.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
     addEvent();
   }
 });
@@ -201,11 +191,11 @@ toDoItem.addEventListener('keydown', (e) => {
 const clearAll = () => {
   const storage = getBookStorage();
   const newTaskArray = storage.filter((task) => task.completed === false);
-  localStorage.setItem('taskList', JSON.stringify(newTaskArray));
+  localStorage.setItem("taskList", JSON.stringify(newTaskArray));
   recalculateIndex();
 };
 
-clearAllBtn.addEventListener('click', () => {
+clearAllBtn.addEventListener("click", () => {
   clearAll();
   appendItems();
 });
@@ -215,11 +205,11 @@ const refreshStatus = () => {
   storage.forEach((stored) => {
     stored.completed = false;
   });
-  localStorage.setItem('taskList', JSON.stringify(storage));
+  localStorage.setItem("taskList", JSON.stringify(storage));
   recalculateIndex();
 };
 
-window.addEventListener('load', () => {
+window.addEventListener("load", () => {
   refreshStatus();
   appendItems();
 });
