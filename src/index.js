@@ -30,6 +30,16 @@ const completeStatus = (indexToChange, newStatus) => {
   recalculateIndex();
 };
 
+// Recalculate index
+
+const recalculateIndex = () => {
+  const storage = getBookStorage();
+  storage.forEach((item, itemIndex) => {
+    item.index = itemIndex;
+  });
+  localStorage.setItem('taskList', JSON.stringify(storage));
+};
+
 // Remove task from local storage
 
 const removeFromStorage = (listIndex) => {
@@ -149,6 +159,7 @@ const addToStorage = (item) => {
   const storage = getBookStorage();
   storage.push(item);
   localStorage.setItem('taskList', JSON.stringify(storage));
+  recalculateIndex();
   clearInputs();
 };
 
