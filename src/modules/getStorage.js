@@ -1,1 +1,0 @@
-// Get data from local storage
