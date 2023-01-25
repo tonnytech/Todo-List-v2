@@ -1,4 +1,4 @@
-// import './index.css';
+import './index.css';
 import Display from './modules/display.js';
 import Storage from './modules/localStorage.js';
 
