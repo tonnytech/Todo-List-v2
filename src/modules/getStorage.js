@@ -1,6 +1,6 @@
 // Get data from local storage
 
-const getBookStorage = () => {
+export const getBookStorage = () => {
   let taskListStorage;
   if (JSON.parse(localStorage.getItem('taskList')) === null) {
     taskListStorage = [];
@@ -10,4 +10,4 @@ const getBookStorage = () => {
   return taskListStorage;
 };
 
-export default getBookStorage;
+// export default getBookStorage;
