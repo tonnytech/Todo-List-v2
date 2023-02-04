@@ -1,7 +1,6 @@
 body {
   margin: 0;
   padding: 0;
-  font-size: 20px;
   box-sizing: border-box;
   background: #f3f2f2;
 }
@@ -9,13 +8,13 @@ body {
 .main-container {
   background-color: #fff;
   border-radius: 5px;
-  margin: 10% 10%;
+  margin: 10rem;
   box-shadow: 3px 3px 3px 3px gray;
   padding: 3%;
 }
 
 h1 {
-  font-size: 22px;
+  font-size: 2.5rem;
   font-weight: normal;
 }
 
@@ -35,14 +34,31 @@ i {
   color: gray;
 }
 
+.button-container {
+  display: flex;
+  justify-content: center;
+}
+
 .my-button {
-  width: 100%;
-  height: 100%;
+  width: 20%;
+}
+
+.my-checkbox {
+  width: 7rem;
+  cursor: pointer;
+}
+
+.fa-solid {
+  color: black;
 }
 
 .my-button:hover {
-  text-decoration: underline;
-  color: #000;
+  color: red;
+  background-color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  border: 3px solid red;
+  font-weight: 700;
 }
 
 .head {
@@ -52,11 +68,22 @@ i {
   padding-right: 3%;
 }
 
+.to-do-input {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.to-do-list {
+  /* border: 1px solid black; */
+}
+
 .adding-to-do-list {
   display: flex;
-  padding-right: 3%;
-  padding-left: 3%;
   justify-content: space-between;
+}
+
+.add-todo-input {
+  font-size: 2.5rem;
 }
 
 .checkbox {
@@ -67,5 +94,9 @@ i {
 
 .to-do-pop {
   display: flex;
-  justify-content: space-between;
+  gap: 3rem;
+  justify-content: center;
+  padding: 1rem;
+  height: 2rem;
+  /* border: 1px solid black; */
 }
